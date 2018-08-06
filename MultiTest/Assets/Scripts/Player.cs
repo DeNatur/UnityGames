@@ -8,13 +8,27 @@ public class Player : MonoBehaviour {
 
     public Camera camera;
     private PlayerMotor motor;
+    private ConfigurableJoint joint;
 
     private Vector3 moveInput;
     private Vector3 moveVelocity;
 
+    [SerializeField]
+    private float thrusterForce = 1000f;
+
+    [Header("Spring settings:")]
+    [SerializeField]
+    private float jointSpring = 20f;
+    [SerializeField]
+    private float jointMaxForce = 40f;
+
+
+
     private void Start()
     {
         motor = GetComponent<PlayerMotor>();
+        joint = GetComponent<ConfigurableJoint>();
+        SetJointSettings(jointSpring);
     }
     //Functions
     private void Update()
@@ -39,7 +53,34 @@ public class Player : MonoBehaviour {
         moveVelocity = moveInput * movementSpeed;
 
         motor.Move(moveVelocity);
+
+
+        //Calculate the thrusterforce based on player input
+        Vector3 _thrusterForce = Vector3.zero;
+
+        if (Input.GetButton("Jump"))
+        {
+            _thrusterForce = Vector3.up * thrusterForce;
+            SetJointSettings(0f);
+        }
+        else
+        {
+            SetJointSettings(jointSpring);
+        }
+
+        //Apply the thruster force
+        motor.ApplyThruster(_thrusterForce);
+
     }
-   
+
+    private void SetJointSettings(float _jointSpring)
+    {
+        joint.yDrive = new JointDrive
+        {
+            positionSpring = _jointSpring,
+            maximumForce = jointMaxForce
+        };
+
+    }
 
 }

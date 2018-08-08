@@ -6,6 +6,7 @@ public class CameraFollow : MonoBehaviour {
 
     public float smoothSpeed = 10f;
     public Vector3 offset;
+    public Vector3 offsetRotation = new Vector3(70f,0f,0f);
     //Functions
     private void LateUpdate()
     {
@@ -16,6 +17,7 @@ public class CameraFollow : MonoBehaviour {
 
 
         transform.position = smoothedPosition;
+        transform.rotation = Quaternion.Euler(offsetRotation);
     }
 
 }

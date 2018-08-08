@@ -31,6 +31,7 @@ public class Player : MonoBehaviour {
         SetJointSettings(jointSpring);
     }
     //Functions
+
     private void Update()
     {
         //Player facing mouse

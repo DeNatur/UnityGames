@@ -563,13 +563,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weapon:
+    bullet: {fileID: 0}
     name: Glock
     damage: 10
     range: 100
+    force: 50000
+    timeToDestroy: 2
   spawnBullet: {fileID: 1658245385165550}
   mask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 4294966783
 --- !u!114 &114437734152135548
 MonoBehaviour:
   m_ObjectHideFlags: 1

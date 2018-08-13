@@ -2,13 +2,18 @@
 using UnityEngine.Networking;
 
 [RequireComponent(typeof(PlayerManager))]
+[RequireComponent(typeof(Player))]
 public class PlayerSetup : NetworkBehaviour {
     [SerializeField]
     Behaviour[] componentsToDisable;
 
-    Camera sceneCamera;
     [SerializeField]
     string remoteLayerName = "RemotePlayer";
+
+    [SerializeField]
+    GameObject playerUIprefab;
+    [HideInInspector]
+    public GameObject playerUIInstance;
 
     private void Start()
     {
@@ -19,12 +24,22 @@ public class PlayerSetup : NetworkBehaviour {
         }
         else
         {
-            sceneCamera = Camera.main;
-            if (sceneCamera != null)
-            {
-                Camera.main.gameObject.SetActive(false);
-            }
-        }   
+            
+
+            //Create PlayerUI
+            playerUIInstance = Instantiate(playerUIprefab);
+            playerUIInstance.name = playerUIprefab.name;
+
+            // Configure PlayerUI
+            PlayerUI ui = playerUIInstance.GetComponent<PlayerUI>();
+            if (ui == null)
+                Debug.LogError("No PlayerUI component on PlayerUI prefab");
+            ui.SetController(GetComponent<Player>());
+            
+            
+        }
+
+        GetComponent<PlayerManager>().Setup();
     }
     public override void OnStartClient()
     {
@@ -74,12 +89,13 @@ public class PlayerSetup : NetworkBehaviour {
 
     private void OnDisable()
     {
-        if(sceneCamera != null)
-        {
-            sceneCamera.gameObject.SetActive(true);
-        }
+
+        Destroy(playerUIInstance);
+
+        GameManager.instance.SetSceneCameraActive(true);
+
         GameManager.UnRegisterPlayer(transform.name);
     }
-
+    
 
 }

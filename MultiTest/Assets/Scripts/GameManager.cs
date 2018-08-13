@@ -2,6 +2,37 @@
 using System.Collections.Generic;
 public class GameManager : MonoBehaviour {
 
+    public static GameManager instance;
+
+    public MatchSettings matchSettings;
+
+    [SerializeField]
+    private GameObject sceneCamera;
+
+    private void Awake()
+    {
+        if (instance != null)
+        {
+            Debug.LogError("More than one GameManager in scene");
+
+        }
+        else
+        {
+            instance = this;
+        }
+    }
+
+
+    public void SetSceneCameraActive(bool isActive)
+    {
+        if (sceneCamera == null)
+            return;
+
+        sceneCamera.SetActive(isActive);
+    }
+    #region Player tracking
+
+
     private const string PLAYER_ID_PREFIX = "Player ";
 
     private static Dictionary<string, PlayerManager> players = new Dictionary<string, PlayerManager>();
@@ -36,4 +67,5 @@ public class GameManager : MonoBehaviour {
     //    GUILayout.EndVertical();
     //    GUILayout.EndArea();
     //}
+    #endregion
 }
